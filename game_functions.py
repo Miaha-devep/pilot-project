@@ -1,6 +1,10 @@
 import sys
+
 import pygame
+
+from alien import Alien
 from bullet import Bullet
+from stars import Star
 
 
 def fire_bullet(game_settings, screen, ship, bullets):
@@ -58,13 +62,15 @@ def check_events(game_settings, screen, ship, bullets, bullets_ult):
             check_keyup_events(event, ship)
 
 
-def update_screen(settings, screen, ship, bullets, bullets_ult):
+def update_screen(settings, screen, ship, aliens, bullets, bullets_ult, stars):
     screen.fill(settings.bg_color)
     for bullet in bullets.sprites():
         bullet.draw_bullet()
     for bullet in bullets_ult.sprites():
         bullet.draw_bullet()
     ship.blitme()
+    stars.draw(screen)
+    aliens.draw(screen)
     pygame.display.flip()
 
 
@@ -72,3 +78,60 @@ def update_any_bullets(bullets, game_settings):
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0 or bullet.rect.top >= game_settings.screen_height or bullet.rect.left >= game_settings.screen_width or bullet.rect.right <= 0:
             bullets.remove(bullet)
+
+
+def get_number_aliens_col(game_settings, alien_width):
+    """Находит число пришельцев в строке"""
+    available_space_col = game_settings.screen_width - 2 * alien_width
+    number_aliens_col = int(available_space_col / (2 * alien_width))
+    return number_aliens_col
+
+
+def create_alien(game_settings, screen, aliens, alien_number_col, row_number):
+    """Создает пришельца"""
+    alien = Alien(game_settings, screen)
+    alien_width = alien.rect.width
+    alien_height = alien.rect.height
+    alien.x = alien_width + 2 * alien_width * alien_number_col
+    alien.rect.x = alien.x
+    alien.y = alien_height + 2 * alien_height * row_number
+    alien.rect.y = alien.y
+    aliens.add(alien)
+
+
+def create_star(game_settings, screen, stars, col_number, row_number):
+    star = Star(game_settings, screen)
+    star_width = star.rect.width
+    star_height = star.rect.height
+    star.x = star_width + 2 * star_width * col_number
+    star.rect.x = star.x
+    star.y = star_height + 2 * star_height * row_number
+    star.rect.y = star.y
+    stars.add(star)
+
+
+def get_number_rows(game_settings, ship_height, alien_height):
+    """Находит число пришельцев в столбце"""
+    available_space_row = game_settings.screen_height - 3 * alien_height - ship_height
+    number_rows = int(available_space_row / (2 * alien_height))
+    return number_rows
+
+
+def create_fleet(game_settings, screen, ship, aliens):
+    """Создает флот пришельцов"""
+    alien = Alien(game_settings, screen)
+
+    number_aliens_col = get_number_aliens_col(game_settings, alien.rect.width)
+    number_aliens_row = get_number_rows(game_settings, ship.rect.height, alien.rect.height)
+    for row_number in range(number_aliens_row):
+        for alien_number in range(number_aliens_col):
+            create_alien(game_settings, screen, aliens, alien_number, row_number)
+
+
+def create_sky_with_stars(game_settings, screen, stars):
+    star = Star(game_settings, screen)
+    number_col = int(game_settings.screen_width / (2 * star.rect.height))
+    number_row = int(game_settings.screen_height / (2 * star.rect.height))
+    for row in range(number_row):
+        for col in range(number_col):
+            create_star(game_settings, screen, stars, col, row)
