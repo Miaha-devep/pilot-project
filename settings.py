@@ -3,7 +3,7 @@ class Settings:
 
     def __init__(self, screen_width=1200, screen_height=800, bg_color=(230, 230, 230), ship_speed_factor=1.25,
                  bullet_speed_factor=0.75, bullet_color=(60, 60, 60),
-                 bullets_allowed=2):
+                 bullets_allowed=3):
         self.screen_width = screen_width
         self.screen_height = screen_height
         self.bg_color = bg_color

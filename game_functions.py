@@ -32,6 +32,8 @@ def check_keydown_events(event, game_settings, screen, ship, bullets, bullets_ul
         fire_bullet(game_settings, screen, ship, bullets)
     if event.key == pygame.K_TAB:
         ultimate_1(game_settings, screen, ship, bullets_ult)
+    elif event.key == pygame.K_g:
+        sys.exit()
 
 
 def check_keyup_events(event, ship):
@@ -66,13 +68,7 @@ def update_screen(settings, screen, ship, bullets, bullets_ult):
     pygame.display.flip()
 
 
-def update_bullets(bullets):
-    for bullet in bullets.copy():
-        if bullet.rect.bottom <= 0:
-            bullets.remove(bullet)
-
-
-def update_bullets_ult(game_settings, bullets):
+def update_any_bullets(bullets, game_settings):
     for bullet in bullets.copy():
         if bullet.rect.bottom <= 0 or bullet.rect.top >= game_settings.screen_height or bullet.rect.left >= game_settings.screen_width or bullet.rect.right <= 0:
             bullets.remove(bullet)

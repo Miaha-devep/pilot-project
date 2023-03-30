@@ -22,9 +22,9 @@ def run_game():
         ship.update()
         bullets.update()
         bullets_ult.update()
-        game_functions.update_bullets(bullets)
-        game_functions.update_bullets_ult(game_settings, bullets_ult)
+        game_functions.update_any_bullets(bullets, game_settings)
+        game_functions.update_any_bullets(bullets_ult, game_settings)
         game_functions.update_screen(game_settings, screen, ship, bullets, bullets_ult)
-        print(len(bullets_ult))
+
 
 run_game()
